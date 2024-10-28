@@ -57,7 +57,7 @@ permit (
 )
 when { resource has productname };
 
-//2. Allow Customer to manage products
+//2.1 Allow Customer to manage products
 permit (
     principal in Jans::Role::"Customer",
     action == Jans::Action::"Write",
@@ -65,6 +65,7 @@ permit (
 )
 when { resource has productname };
 
+// 2.2 Allow Customer to manage products
 permit (
     principal in Jans::Role::"Staff",
     action == Jans::Action::"Write",
