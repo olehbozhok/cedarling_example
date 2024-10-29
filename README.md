@@ -23,6 +23,8 @@ python build_policy.py
 
 In result you will get updated file `policy_store.json`.
 
+Human readable version of files contains in folder `project_files`
+
 To run main rust file execute next command:
 
 ```bash

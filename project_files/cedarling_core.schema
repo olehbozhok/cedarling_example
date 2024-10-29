@@ -1,19 +1,28 @@
 namespace Jans {
-type Context = {"current_time": __cedar::Long, "device_health": Set < __cedar::String >, "fraud_indicators": Set < __cedar::String >, "geolocation": Set < __cedar::String >, "network": __cedar::ipaddr, "network_type": __cedar::String, "operating_system": __cedar::String, "user_agent": __cedar::String};
-type Url = {"host": __cedar::String, "path": __cedar::String, "protocol": __cedar::String};
-type email_address = {"domain": __cedar::String, "id": __cedar::String};
-entity Product = {"author": User, "organization"?: Organization, "productname"?: __cedar::String};
+type Context = {"current_time": Long, "device_health": Set < String >, "fraud_indicators": Set < String >, "geolocation": Set < String >, "network": ipaddr, "network_type": String, "operating_system": String, "user_agent": String};
+type Url = {"host": String, "path": String, "protocol": String};
+type email_address = {"domain": String, "id": String};
+entity Product = {"author": User, "organization"?: Organization, "productname"?: String};
 entity TrustedIssuer = {"issuer_entity_id": Url};
-entity Workload = {"client_id": __cedar::String, "iss": TrustedIssuer, "name": __cedar::String, "rp_id": __cedar::String, "spiffe_id": __cedar::String};
-entity Access_token = {"aud": __cedar::String, "exp": __cedar::Long, "iat": __cedar::Long, "iss": TrustedIssuer, "jti": __cedar::String, "nbf": __cedar::Long, "scope": __cedar::String};
-entity Application = {"app_id": __cedar::String, "name": __cedar::String, "url": Url};
+
+entity Application = {"app_id": String, "name": String, "url": Url};
 entity Role;
-entity User in [Role] = {"email"?: email_address, "organization"?: Organization, "phone_number"?: __cedar::String, "role"?: __cedar::String, "sub"?: __cedar::String, "supportsOrganizations"?: Set < Organization >, "userId": __cedar::String, "username"?: __cedar::String};
-entity Userinfo_token = {"aud": __cedar::String, "birthdate": __cedar::String, "email": email_address, "exp": __cedar::Long, "iat": __cedar::Long, "iss": TrustedIssuer, "jti": __cedar::String, "name": __cedar::String, "phone_number": __cedar::String, "role": Set < __cedar::String >, "sub": __cedar::String};
-entity id_token = {"acr": Set < __cedar::String >, "amr": __cedar::String, "aud": __cedar::String, "azp": __cedar::String, "birthdate": __cedar::String, "email": email_address, "exp": __cedar::Long, "iat": __cedar::Long, "iss": TrustedIssuer, "jti": __cedar::String, "name": __cedar::String, "phone_number": __cedar::String, "role": Set < __cedar::String >, "sub": __cedar::String};
-entity HTTP_Request = {"accept": Set < __cedar::String >, "header": Set < __cedar::String >, "url": Url};
-entity Organization = {"orgId": __cedar::String};
-entity Ticket = {"author": User, "organization"?: Organization, "supportedByOrganizations"?: Set < Organization >, "ticketName": __cedar::String};
+// Userinfo_token is unused currently
+entity Userinfo_token = {"aud": String, "birthdate": String, "email": email_address, "exp": Long, "iat": Long, "iss": TrustedIssuer, "jti": String, "name": String, "phone_number": String, "role": Set < String >, "sub": String};
+entity HTTP_Request = {"accept": Set < String >, "header": Set < String >, "url": Url};
+entity Organization = {"orgId": String};
+
+// active entities in example
+entity Access_token = {"aud": String, "exp": Long, "iat": Long, "iss": TrustedIssuer, "jti": String, "scope": Set<String>};
+entity id_token = {"acr": String, "amr": String, "aud": String, "exp": Long, "iat": Long, "iss": TrustedIssuer, "jti": String, "sub": String};
+
+// user ID in JWT token is `sub` field
+// 
+entity User in [Role] = {"email"?: String, "organization_id"?: String, "phone_number"?: String, "sub"?: String, "supportsOrganizations_ids"?: Set <String>, "username"?: String};
+entity Workload = {"client_id": String, "iss": TrustedIssuer, "name": String};
+entity Ticket = {"author_user_id": String, "organization_id": String, "ticket_name": String};
+
+
 action "Close" appliesTo {
   principal: [User],
   resource: [Ticket],
