@@ -1,4 +1,5 @@
 use cedarling::*;
+use std::fs;
 use std::process;
 
 fn main() {
@@ -9,7 +10,8 @@ fn main() {
 }
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
-    let policy_store_content = include_str!("example_policy_store.json");
+    let policy_store_content =
+        fs::read_to_string("policy_store.json").expect("Should have been able to read the file");
 
     let cedarling = Cedarling::new(BootstrapConfig {
         application_name: "test_app".to_string(),
@@ -17,7 +19,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             log_type: LogTypeConfig::StdOut,
         },
         policy_store_config: PolicyStoreConfig {
-            source: PolicyStoreSource::Json(policy_store_content.to_string()),
+            source: PolicyStoreSource::Json(policy_store_content),
         },
         jwt_config: JwtConfig::Disabled,
     })?;
@@ -34,11 +36,13 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             "country": "US",
     });
 
+    // but also we can parse `Request` from json
+    // example: https://github.com/JanssenProject/jans/blob/main/jans-cedarling/cedarling/src/tests/mod.rs#L116
     let result = cedarling.authorize(Request {
         access_token,
         id_token,
         userinfo_token,
-        action: "Jans::Action::\"Update\"".to_string(),
+        action: "Jans::Action::\"Write\"".to_string(),
         context: serde_json::json!({}),
         resource: ResourceData {
             id: "random_id".to_string(),

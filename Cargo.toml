@@ -1,0 +1,9 @@
+[package]
+name = "cedarling_example"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cedarling = { git = "https://github.com/JanssenProject/jans", branch = "main" }
+serde = "1"
+serde_json = "1"
